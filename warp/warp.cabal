@@ -34,11 +34,11 @@ flag network-bytestring
 flag allow-sendfilefd
     description: Allow use of sendfileFd (not available on GNU/kFreeBSD)
 
-flag include-warp-version
+flag use-package-info
     description:
-        Exposes the version in Network.Wai.Handler.Warp.warpVersion.
-        This can cause a large runtime dependency closure due to depending on
-        files shipped with GHC itself.
+        Uses 'PackageInfo_warp' to determine version instead of 'Paths_warp'.
+        Needs `cabal-version: 3.12` or higher.
+    default:     False
     manual:      True
 
 flag warp-debug
@@ -86,7 +86,9 @@ library
         Network.Wai.Handler.Warp.Windows
         Network.Wai.Handler.Warp.WithApplication
 
-    if flag(include-warp-version)
+    if flag(use-package-info)
+        other-modules: PackageInfo_warp
+    else
         other-modules: Paths_warp
 
     default-language: Haskell2010
@@ -149,8 +151,8 @@ library
     if impl(ghc >=8)
         default-extensions: Strict StrictData
 
-    if flag(include-warp-version)
-        cpp-options: -DINCLUDE_WARP_VERSION
+    if flag(use-package-info)
+        cpp-options: -DUSE_PACKAGE_INFO
 
 test-suite doctest
     type:             exitcode-stdio-1.0
@@ -221,7 +223,9 @@ test-suite spec
         Network.Wai.Handler.Warp.Windows
         Network.Wai.Handler.Warp.WithApplication
 
-    if flag(include-warp-version)
+    if flag(use-package-info)
+        other-modules: PackageInfo_warp
+    else
         other-modules: Paths_warp
 
     default-language:   Haskell2010
@@ -300,7 +304,9 @@ benchmark parser
         Network.Wai.Handler.Warp.Settings
         Network.Wai.Handler.Warp.Types
 
-    if flag(include-warp-version)
+    if flag(use-package-info)
+        other-modules: PackageInfo_warp
+    else
         other-modules: Paths_warp
 
     default-language: Haskell2010

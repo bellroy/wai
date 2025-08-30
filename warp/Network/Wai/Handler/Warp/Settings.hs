@@ -31,9 +31,11 @@ import Network.Wai.Handler.Warp.Types
 import Network.Wai.Handler.Warp.Windows (windowsThreadBlockHack)
 #endif
 
-#ifdef INCLUDE_WARP_VERSION
 import Data.Version (showVersion)
-import qualified Paths_warp
+#ifdef USE_PACKAGE_INFO
+import PackageInfo_warp (version)
+#else
+import Paths_warp (version)
 #endif
 
 -- | Various Warp server settings. This is purposely kept as an abstract data
@@ -324,9 +326,4 @@ defaultAccept =
 
 -- | The version of Warp.
 warpVersion :: String
-warpVersion =
-#ifdef INCLUDE_WARP_VERSION
-  showVersion Paths_warp.version
-#else
-  "unknown"
-#endif
+warpVersion = showVersion version
